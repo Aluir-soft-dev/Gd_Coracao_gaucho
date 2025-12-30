@@ -78,13 +78,13 @@ export default function Header() {
       <div className="relative hidden md:flex items-center justify-between px-10 py-3 max-w-7xl mx-auto">
         {/* LOGO */}
         <Link href="/" className="rounded-full bg-white p-1">
-          <Image
-            src="/images/Logo.jpg"
-            width={56}
-            height={56}
-            alt="Logo"
-            className="rounded-full"
-          />
+      <Image
+  src="/images/logo.jpg"
+  width={56}
+  height={56}
+  alt="Logo"
+  className="rounded-full"
+/>
         </Link>
 
         {/* NAV */}
