@@ -44,14 +44,16 @@ export default function Header() {
 
         {/* LOGO */}
         <Link href="/">
-          <Image
-            src="/images/LOGO2.png"
-            alt="Logo"
-            width={48}
-            height={48}
-            className="rounded-full"
-            priority
-          />
+     <Image
+  src="/images/logo.jpg"
+  alt="Logo"
+  width={56}
+  height={56}
+  className="rounded-full"
+  unoptimized
+  priority
+/>
+
         </Link>
 
         {/* SOCIAL MOBILE */}
