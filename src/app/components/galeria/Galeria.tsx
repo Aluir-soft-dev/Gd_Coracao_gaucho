@@ -18,8 +18,8 @@ interface CardMeta {
 const cardsFixos: CardData[] = [
   {
     titulo: "Bailes de Formatura",
-    thumb: "/images/Foto1.jpg",
-    imagens: ["/images/Foto1.jpg", "/images/foto3.png", "/images/foto4.png"],
+    thumb: "/images/foto1.jpg",
+    imagens: ["/images/foto1.jpg", "/images/foto3.png", "/images/foto4.png"],
   },
   {
     titulo: "Aulas",
@@ -93,7 +93,6 @@ export default function BlogSection() {
       i === 0 ? imagensRef.current.length - 1 : i - 1
     );
 
-  // trava scroll da página
   useEffect(() => {
     document.body.style.overflow = modalOpen ? "hidden" : "";
     return () => {
@@ -132,7 +131,6 @@ export default function BlogSection() {
         Blog
       </h2>
 
-      {/* ÁLBUNS */}
       <h3 className="text-2xl font-bold text-red-900 text-center mb-8">
         Álbuns de Formatura
       </h3>
@@ -165,7 +163,6 @@ export default function BlogSection() {
         ))}
       </div>
 
-      {/* MODAL */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
           <button
@@ -190,26 +187,24 @@ export default function BlogSection() {
           </button>
 
           <div className="flex flex-col items-center w-full h-full pt-16">
-            {/* IMAGEM PRINCIPAL */}
             <div className="relative w-full max-w-[80vw] h-[60vh]">
               {loadingAlbum ? (
                 <div className="text-white">Carregando…</div>
               ) : (
                 <Image
-                  src={imagensRef.current[fotoIndex]}
+                  src={imagensRef.current[fotoIndex] || ""}
                   alt=""
                   fill
+                  unoptimized
                   className="object-contain"
                 />
               )}
             </div>
 
-            {/* CONTADOR */}
             <div className="text-white mt-2">
               {fotoIndex + 1} / {imagensRef.current.length}
             </div>
 
-            {/* 🔥 SCROLL HORIZONTAL DE THUMBNAILS */}
             <div className="mt-4 w-full max-w-[90vw] overflow-x-auto">
               <div className="flex gap-3 px-4">
                 {imagensRef.current.map((img, i) => (
@@ -223,7 +218,13 @@ export default function BlogSection() {
                           : "border-transparent opacity-70 hover:opacity-100"
                       }`}
                   >
-                    <Image src={img} alt="" fill className="object-cover" />
+                    <Image
+                      src={img}
+                      alt=""
+                      fill
+                      unoptimized
+                      className="object-cover"
+                    />
                   </button>
                 ))}
               </div>
