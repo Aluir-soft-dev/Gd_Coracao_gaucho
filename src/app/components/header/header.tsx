@@ -79,7 +79,7 @@ export default function Header() {
         {/* LOGO */}
         <Link href="/" className="rounded-full bg-white p-1">
       <Image
-  src="/images/logo.jpg"
+  src="/images/Logo.jpg"
   width={56}
   height={56}
   alt="Logo"
