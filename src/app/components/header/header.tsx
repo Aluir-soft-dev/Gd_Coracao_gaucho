@@ -45,11 +45,12 @@ export default function Header() {
         {/* LOGO */}
         <Link href="/">
           <Image
-            src="/images/Logo.jpg"
+            src="/images/logo.jpg"
             alt="Logo"
             width={48}
             height={48}
             className="rounded-full"
+            priority
           />
         </Link>
 
@@ -60,6 +61,7 @@ export default function Header() {
               key={item.alt}
               href={item.href}
               target="_blank"
+              rel="noopener noreferrer"
               className="group w-12 h-12 flex items-center justify-center"
             >
               <Image
@@ -78,13 +80,14 @@ export default function Header() {
       <div className="relative hidden md:flex items-center justify-between px-10 py-3 max-w-7xl mx-auto">
         {/* LOGO */}
         <Link href="/" className="rounded-full bg-white p-1">
-      <Image
-  src="/images/Logo.jpg"
-  width={56}
-  height={56}
-  alt="Logo"
-  className="rounded-full"
-/>
+          <Image
+            src="/images/logo.jpg"
+            width={56}
+            height={56}
+            alt="Logo"
+            className="rounded-full"
+            priority
+          />
         </Link>
 
         {/* NAV */}
@@ -118,6 +121,7 @@ export default function Header() {
                 key={item.alt}
                 href={item.href}
                 target="_blank"
+                rel="noopener noreferrer"
                 className="group w-12 h-12 flex items-center justify-center"
               >
                 <Image
