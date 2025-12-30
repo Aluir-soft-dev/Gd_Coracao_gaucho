@@ -55,7 +55,7 @@ export default function Sobre() {
               {/* IMAGEM */}
               <div className="md:w-1/2 flex justify-center">
                 <Image
-                  src="/images/Logo.jpg"
+                  src="/images/logo.jpg"
                   alt="foto sobre"
                   width={600}
                   height={600}
