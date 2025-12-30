@@ -1,0 +1,50 @@
+import type { Metadata } from "next";
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+import Header from "./components/header/header";
+import { Footer } from "./components/footer/footer";
+import YoutubeGlobalPlayer from "./components/YouTubeMusicPlayer";
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: "Gd Coração Gaúcho",
+  description: "Quem dança com o coração nunca dança sozinho",
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="pt-BR">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased bg-black text-white`}
+      >
+        {/* PLAYER GLOBAL (NUNCA DESMONTA) */}
+        <YoutubeGlobalPlayer />
+
+        {/* HEADER TOTALMENTE TRANSPARENTE */}
+        <Header />
+
+        {/* CONTEÚDO DAS PÁGINAS */}
+        <main className="relative min-h-screen">
+          {children}
+        </main>
+
+        {/* FOOTER */}
+        <Footer />
+      </body>
+    </html>
+  );
+}
