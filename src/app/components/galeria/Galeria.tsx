@@ -110,9 +110,15 @@ export default function BlogSection() {
           <div
             key={`${m.categoria}-${m.book}`}
             onClick={() => abrirModal(m.imagens)}
-            className="bg-white shadow-xl rounded-2xl p-5 flex flex-col items-center gap-4 hover:scale-105 transition cursor-pointer"
+            className="
+              bg-white shadow-xl rounded-2xl p-5
+              flex flex-col items-center gap-4
+              transition cursor-pointer
+              md:hover:scale-105
+            "
           >
-            <div className="w-full h-56 rounded-xl overflow-hidden bg-gray-100">
+            {/* THUMB */}
+            <div className="w-full aspect-[4/3] rounded-xl overflow-hidden bg-gray-100">
               {m.thumb && (
                 <img
                   src={m.thumb}
@@ -122,18 +128,32 @@ export default function BlogSection() {
               )}
             </div>
 
-            <span className="font-semibold text-center">
+            {/* TITULO */}
+            <span className="
+              font-semibold text-center
+              text-sm sm:text-base
+              leading-tight
+              line-clamp-2 sm:line-clamp-none
+            ">
               {formatarNome(m.categoria)} — {formatarNome(m.book)}
             </span>
 
-            <button className="bg-red-600 text-white px-5 py-2 rounded-xl hover:bg-red-700 transition">
+            {/* BOTÃO */}
+            <button
+              className="
+                mt-auto
+                bg-red-600 text-white
+                px-5 py-2 rounded-xl
+                hover:bg-red-700 transition
+              "
+            >
               Ver mais
             </button>
           </div>
         ))}
       </div>
 
-      {/* ================= MODAL RESPONSIVO ================= */}
+      {/* ================= MODAL ================= */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
           {/* FECHAR */}
@@ -160,7 +180,7 @@ export default function BlogSection() {
           </button>
 
           <div className="flex flex-col items-center w-full h-full pt-20 md:pt-16">
-            {/* IMAGEM PRINCIPAL */}
+            {/* IMAGEM */}
             <div className="relative w-full max-w-[95vw] md:max-w-[80vw] h-[45vh] md:h-[60vh]">
               <Image
                 src={imagensRef.current[fotoIndex] || ""}
@@ -176,7 +196,7 @@ export default function BlogSection() {
               {fotoIndex + 1} / {imagensRef.current.length}
             </div>
 
-            {/* THUMBNAILS */}
+            {/* THUMBS */}
             <div className="mt-4 w-full max-w-[95vw] overflow-x-auto">
               <div className="flex gap-3 px-4 pb-4">
                 {imagensRef.current.map((img, i) => (
