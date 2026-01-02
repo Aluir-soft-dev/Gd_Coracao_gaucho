@@ -3,44 +3,26 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-interface CardData {
-  titulo: string;
-  thumb: string;
-  imagens: string[];
+interface AlbumMap {
+  [categoria: string]: {
+    [book: string]: string[];
+  };
 }
 
 interface CardMeta {
   categoria: string;
   book: string;
+  imagens: string[];
   thumb?: string;
 }
-
-const cardsFixos: CardData[] = [
-  {
-    titulo: "Bailes de Formatura",
-    thumb: "/images/foto1.jpg",
-    imagens: ["/images/foto1.jpg", "/images/foto3.png", "/images/foto4.png"],
-  },
-  {
-    titulo: "Aulas",
-    thumb: "/images/foto4.png",
-    imagens: ["/images/foto4.png"],
-  },
-  {
-    titulo: "Momentos Especiais",
-    thumb: "/images/foto3.png",
-    imagens: ["/images/foto3.png"],
-  },
-];
 
 export default function BlogSection() {
   const [modalOpen, setModalOpen] = useState(false);
   const [fotoIndex, setFotoIndex] = useState(0);
-  const [formaturasMeta, setFormaturasMeta] = useState<CardMeta[]>([]);
-  const [loadingAlbum, setLoadingAlbum] = useState(false);
+  const [albuns, setAlbuns] = useState<CardMeta[]>([]);
+  const [loading, setLoading] = useState(true);
 
   const imagensRef = useRef<string[]>([]);
-  const imagensCacheRef = useRef<Map<string, string[]>>(new Map());
 
   const API =
     "https://billowing-king-cb13.gdcoracaogaucho-comercial.workers.dev";
@@ -48,42 +30,49 @@ export default function BlogSection() {
   const formatarNome = (n: string) =>
     n.replace(/[-_]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
-  const keyFor = (c: string, b: string) => `${c}|${b}`;
+  // ==========================
+  // CARREGAR MAPA COMPLETO
+  // ==========================
+  useEffect(() => {
+    (async () => {
+      try {
+        const r = await fetch(`${API}/api/mapa`);
+        const mapa: AlbumMap = await r.json();
 
-  async function loadAlbum(c: string, b: string) {
-    const key = keyFor(c, b);
+        const cards: CardMeta[] = [];
 
-    if (imagensCacheRef.current.has(key)) {
-      imagensRef.current = imagensCacheRef.current.get(key)!;
-      return;
-    }
+        Object.entries(mapa).forEach(([categoria, books]) => {
+          Object.entries(books).forEach(([book, imagens]) => {
+            cards.push({
+              categoria,
+              book,
+              imagens,
+              thumb: imagens?.[0],
+            });
+          });
+        });
 
-    setLoadingAlbum(true);
-    try {
-      const r = await fetch(`${API}/api/books/${c}/${b}`);
-      const imgs: string[] = await r.json();
-      imagensRef.current = imgs || [];
-      imagensCacheRef.current.set(key, imgs || []);
-    } catch {
-      imagensRef.current = [];
-    } finally {
-      setLoadingAlbum(false);
-    }
-  }
+        setAlbuns(cards);
+      } catch (e) {
+        console.error("Erro ao carregar álbuns", e);
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
 
-  async function abrirModal(
-    imagens?: string[],
-    categoria?: string,
-    book?: string
-  ) {
-    if (imagens) imagensRef.current = imagens;
-    else if (categoria && book) await loadAlbum(categoria, book);
-
+  // ==========================
+  // MODAL
+  // ==========================
+  function abrirModal(imagens: string[]) {
+    imagensRef.current = imagens;
     setFotoIndex(0);
     setModalOpen(true);
   }
 
-  const fecharModal = () => setModalOpen(false);
+  function fecharModal() {
+    setModalOpen(false);
+  }
 
   const next = () =>
     setFotoIndex((i) => (i + 1) % imagensRef.current.length);
@@ -100,31 +89,9 @@ export default function BlogSection() {
     };
   }, [modalOpen]);
 
-  useEffect(() => {
-    (async () => {
-      const r = await fetch(`${API}/api/categorias`);
-      const categorias: string[] = await r.json();
-
-      const meta: CardMeta[] = [];
-
-      for (const c of categorias) {
-        const rr = await fetch(`${API}/api/books/${c}`);
-        const books: string[] = await rr.json();
-        books.forEach((b) => meta.push({ categoria: c, book: b }));
-      }
-
-      for (const m of meta) {
-        try {
-          const r = await fetch(`${API}/api/books/${m.categoria}/${m.book}`);
-          const imgs: string[] = await r.json();
-          m.thumb = imgs?.[0];
-        } catch {}
-      }
-
-      setFormaturasMeta(meta);
-    })();
-  }, []);
-
+  // ==========================
+  // RENDER
+  // ==========================
   return (
     <div className="w-full py-20 px-6">
       <h2 className="text-3xl font-bold text-red-900 text-center mb-10">
@@ -135,11 +102,15 @@ export default function BlogSection() {
         Álbuns de Formatura
       </h3>
 
+      {loading && (
+        <p className="text-center text-gray-500">Carregando álbuns…</p>
+      )}
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
-        {formaturasMeta.map((m) => (
+        {albuns.map((m) => (
           <div
             key={`${m.categoria}-${m.book}`}
-            onClick={() => abrirModal(undefined, m.categoria, m.book)}
+            onClick={() => abrirModal(m.imagens)}
             className="bg-white shadow-xl rounded-2xl p-5 flex flex-col items-center gap-4 hover:scale-105 transition cursor-pointer"
           >
             <div className="w-full h-56 rounded-xl overflow-hidden bg-gray-100">
@@ -163,6 +134,7 @@ export default function BlogSection() {
         ))}
       </div>
 
+      {/* ================= MODAL ================= */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
           <button
@@ -188,17 +160,13 @@ export default function BlogSection() {
 
           <div className="flex flex-col items-center w-full h-full pt-16">
             <div className="relative w-full max-w-[80vw] h-[60vh]">
-              {loadingAlbum ? (
-                <div className="text-white">Carregando…</div>
-              ) : (
-                <Image
-                  src={imagensRef.current[fotoIndex] || ""}
-                  alt=""
-                  fill
-                  unoptimized
-                  className="object-contain"
-                />
-              )}
+              <Image
+                src={imagensRef.current[fotoIndex] || ""}
+                alt=""
+                fill
+                unoptimized
+                className="object-contain"
+              />
             </div>
 
             <div className="text-white mt-2">
@@ -211,12 +179,11 @@ export default function BlogSection() {
                   <button
                     key={i}
                     onClick={() => setFotoIndex(i)}
-                    className={`relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition
-                      ${
-                        i === fotoIndex
-                          ? "border-yellow-400"
-                          : "border-transparent opacity-70 hover:opacity-100"
-                      }`}
+                    className={`relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition ${
+                      i === fotoIndex
+                        ? "border-yellow-400"
+                        : "border-transparent opacity-70 hover:opacity-100"
+                    }`}
                   >
                     <Image
                       src={img}
