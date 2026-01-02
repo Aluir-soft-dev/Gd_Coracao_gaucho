@@ -31,7 +31,7 @@ export default function BlogSection() {
     n.replace(/[-_]/g, " ").replace(/\b\w/g, (l) => l.toUpperCase());
 
   // ==========================
-  // CARREGAR MAPA COMPLETO
+  // CARREGAR MAPA
   // ==========================
   useEffect(() => {
     (async () => {
@@ -40,7 +40,6 @@ export default function BlogSection() {
         const mapa: AlbumMap = await r.json();
 
         const cards: CardMeta[] = [];
-
         Object.entries(mapa).forEach(([categoria, books]) => {
           Object.entries(books).forEach(([book, imagens]) => {
             cards.push({
@@ -134,32 +133,35 @@ export default function BlogSection() {
         ))}
       </div>
 
-      {/* ================= MODAL ================= */}
+      {/* ================= MODAL RESPONSIVO ================= */}
       {modalOpen && (
-        <div className="fixed inset-0 bg-black/90 z-50 flex items-center justify-center">
+        <div className="fixed inset-0 bg-black/95 z-50 flex items-center justify-center">
+          {/* FECHAR */}
           <button
             onClick={fecharModal}
-            className="absolute top-6 right-6 text-white text-4xl"
+            className="absolute top-4 right-4 z-50 bg-black/60 text-white w-12 h-12 rounded-full flex items-center justify-center text-3xl"
           >
             ×
           </button>
 
+          {/* BOTÕES DESKTOP */}
           <button
             onClick={prev}
-            className="absolute left-6 text-white text-5xl"
+            className="hidden md:flex absolute left-6 text-white text-5xl"
           >
             ❮
           </button>
 
           <button
             onClick={next}
-            className="absolute right-6 text-white text-5xl"
+            className="hidden md:flex absolute right-6 text-white text-5xl"
           >
             ❯
           </button>
 
-          <div className="flex flex-col items-center w-full h-full pt-16">
-            <div className="relative w-full max-w-[80vw] h-[60vh]">
+          <div className="flex flex-col items-center w-full h-full pt-20 md:pt-16">
+            {/* IMAGEM PRINCIPAL */}
+            <div className="relative w-full max-w-[95vw] md:max-w-[80vw] h-[45vh] md:h-[60vh]">
               <Image
                 src={imagensRef.current[fotoIndex] || ""}
                 alt=""
@@ -169,17 +171,19 @@ export default function BlogSection() {
               />
             </div>
 
-            <div className="text-white mt-2">
+            {/* CONTADOR */}
+            <div className="text-white mt-2 text-sm md:text-base">
               {fotoIndex + 1} / {imagensRef.current.length}
             </div>
 
-            <div className="mt-4 w-full max-w-[90vw] overflow-x-auto">
-              <div className="flex gap-3 px-4">
+            {/* THUMBNAILS */}
+            <div className="mt-4 w-full max-w-[95vw] overflow-x-auto">
+              <div className="flex gap-3 px-4 pb-4">
                 {imagensRef.current.map((img, i) => (
                   <button
                     key={i}
                     onClick={() => setFotoIndex(i)}
-                    className={`relative w-20 h-20 shrink-0 rounded-lg overflow-hidden border-2 transition ${
+                    className={`relative w-16 h-16 md:w-20 md:h-20 shrink-0 rounded-lg overflow-hidden border-2 transition ${
                       i === fotoIndex
                         ? "border-yellow-400"
                         : "border-transparent opacity-70 hover:opacity-100"
