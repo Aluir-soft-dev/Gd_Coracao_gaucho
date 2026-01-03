@@ -14,7 +14,7 @@ export default function CoracaoGauchoPage() {
           {/* LOGO */}
           <div className="relative w-48 h-48">
             <Image
-              src="/images/Logo.jpg"
+              src="/images/LOGO2.png"
               alt="Grupo de Danças Coração Gaúcho"
               fill
               className="object-contain"
