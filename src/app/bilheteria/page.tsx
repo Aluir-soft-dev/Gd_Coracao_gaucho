@@ -4,21 +4,19 @@ import Link from "next/link";
 export default function CoracaoGauchoPage() {
   return (
     <div className="min-h-screen bg-gray-50 px-6 md:px-20">
-
       {/* ESPAÇAMENTO PARA HEADER */}
       <div className="pt-32 md:pt-40 flex items-center justify-center mb-20">
-
         {/* CARD CENTRAL */}
         <div className="bg-white shadow-2xl rounded-2xl max-w-lg w-full p-16 md:p-20 flex flex-col items-center text-center gap-6">
-          
           {/* LOGO */}
-          <div className="relative w-48 h-48">
+          <div className="flex items-center justify-center">
             <Image
-              src="/images/LOGO2.png"
+              src="/images/logo2.png" // ⚠️ minúsculo
               alt="Grupo de Danças Coração Gaúcho"
-              fill
-              className="object-contain"
+              width={192}
+              height={192}
               priority
+              className="object-contain"
             />
           </div>
 
@@ -44,7 +42,6 @@ export default function CoracaoGauchoPage() {
           >
             Voltar para a página principal
           </Link>
-
         </div>
       </div>
     </div>
