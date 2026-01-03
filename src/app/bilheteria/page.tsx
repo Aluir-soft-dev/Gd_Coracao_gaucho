@@ -11,7 +11,7 @@ export default function CoracaoGauchoPage() {
           {/* LOGO */}
           <div className="flex items-center justify-center">
             <Image
-              src="/images/logo2.png" // ⚠️ minúsculo
+              src="/images/LOGO2.png" // ⚠️ minúsculo
               alt="Grupo de Danças Coração Gaúcho"
               width={192}
               height={192}
